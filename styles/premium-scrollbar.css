@@ -1,0 +1,56 @@
+/* Premium scrollbar styles for system prompt */
+.premium-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(180, 180, 180, 0.2);
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(180, 180, 180, 0.4);
+}
+
+/* Hide scrollbar when not hovering */
+.premium-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180, 180, 180, 0.2) transparent;
+}
+
+.premium-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(180, 180, 180, 0.4);
+}
+
+/* Dark mode adjustments */
+.dark .premium-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 200, 200, 0.15);
+}
+
+.dark .premium-scrollbar::-webkit-scrollbar-thumb:hover,
+.dark .premium-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 200, 200, 0.25);
+}
+
+.dark .premium-scrollbar {
+  scrollbar-color: rgba(200, 200, 200, 0.15) transparent;
+}
+
+/* Firefox support */
+@supports (scrollbar-color: auto) {
+  .premium-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(180, 180, 180, 0.2) transparent;
+  }
+  
+  .dark .premium-scrollbar {
+    scrollbar-color: rgba(200, 200, 200, 0.15) transparent;
+  }
+}
