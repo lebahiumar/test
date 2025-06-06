@@ -34,6 +34,7 @@ import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Types from AccountDialog
 interface AccountInfoForDisplay {
@@ -273,6 +274,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
   };
 
+  const isMobile = useIsMobile();
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl md:max-w-2xl lg:max-w-3xl w-[95vw] max-h-[90vh] p-0 gap-0 bg-background dark:bg-[oklch(0.09_0.01_240)] rounded-xl shadow-2xl overflow-hidden flex flex-col">
@@ -403,30 +406,32 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                     <span className="text-xs text-foreground font-medium">{browserTtsSpeed.toFixed(1)}x</span>
                                 </div>
                                 <Slider id="b-tts-speed" min={0.5} max={2} step={0.1} value={[browserTtsSpeed]} onValueChange={(v) => onSetBrowserTtsSpeed(v[0])} />
-                                <div className="space-y-1">
-                                  <Label htmlFor="browser-tts-voice" className="text-xs text-muted-foreground">Browser TTS Voice</Label>
-                                  <Select
-                                    value={selectedBrowserTtsVoiceURI}
-                                    onValueChange={onSetSelectedBrowserTtsVoiceURI}
-                                  >
-                                    <SelectTrigger id="browser-tts-voice">
-                                      <SelectValue placeholder="Select a voice..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {availableBrowserVoices.length > 0 ? (
-                                        availableBrowserVoices.map((voice) => (
-                                          <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
-                                            {voice.name} ({voice.lang}) {voice.default ? "- Default" : ""}
+                                {!isMobile && (
+                                  <div className="space-y-1">
+                                    <Label htmlFor="browser-tts-voice" className="text-xs text-muted-foreground">Browser TTS Voice</Label>
+                                    <Select
+                                      value={selectedBrowserTtsVoiceURI}
+                                      onValueChange={onSetSelectedBrowserTtsVoiceURI}
+                                    >
+                                      <SelectTrigger id="browser-tts-voice">
+                                        <SelectValue placeholder="Select a voice..." />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {availableBrowserVoices.length > 0 ? (
+                                          availableBrowserVoices.map((voice) => (
+                                            <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
+                                              {voice.name} ({voice.lang}) {voice.default ? "- Default" : ""}
+                                            </SelectItem>
+                                          ))
+                                        ) : (
+                                          <SelectItem value="no-voices" disabled>
+                                            No voices available or loading...
                                           </SelectItem>
-                                        ))
-                                      ) : (
-                                        <SelectItem value="no-voices" disabled>
-                                          No voices available or loading...
-                                        </SelectItem>
-                                      )}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
+                                        )}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                )}
                             </div>
                           )}
                           {ttsProvider === 'elevenlabs' && <div className="space-y-2 pt-2"> <Label htmlFor="el-key" className="text-xs text-muted-foreground">ElevenLabs API Key</Label> <Input id="el-key" type="password" value={tempElevenLabsKey} onChange={(e) => setTempElevenLabsKey(e.target.value)} placeholder="Enter ElevenLabs API Key" /> <div className="flex justify-end gap-2"><Button variant="ghost" size="sm" onClick={handleRemoveElevenLabsKey} disabled={!elevenLabsApiKey}>Remove</Button><Button size="sm" onClick={handleSaveElevenLabsKey} disabled={tempElevenLabsKey === (elevenLabsApiKey || '') || !tempElevenLabsKey.trim()}>{elevenLabsApiKey ? 'Update' : 'Save'}</Button></div> </div>}

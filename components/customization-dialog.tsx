@@ -19,6 +19,7 @@ import { Slider } from '@/components/ui/slider';
 import { SearchGroupId, searchGroups as allSearchGroupsConfig } from '@/lib/utils';
 import { Settings, History, MessageSquareText, Mic, Globe, Book, YoutubeIcon, Code, Bot as BuddyIcon, Image as ImageIcon, FileText, Paperclip, KeyRound, RadioTower, Volume2, Brain, Gauge } from 'lucide-react';
 import { toast } from 'sonner';
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CustomizationDialogProps {
   isOpen: boolean;
@@ -79,6 +80,7 @@ export const CustomizationDialog: React.FC<CustomizationDialogProps> = ({
 }) => {
   const availableGroupsToCustomize = allSearchGroupsConfig.filter(g => g.show);
   const [tempElevenLabsKey, setTempElevenLabsKey] = useState(elevenLabsApiKey || '');
+  const isMobile = useIsMobile();
 
   const handleSaveElevenLabsKey = () => {
     onSetElevenLabsApiKey(tempElevenLabsKey.trim() || null);
@@ -173,9 +175,11 @@ export const CustomizationDialog: React.FC<CustomizationDialogProps> = ({
                                     value={[browserTtsSpeed]}
                                     onValueChange={(value) => onSetBrowserTtsSpeed(value[0])}
                                 />
-                                <p className="text-[10px] text-muted-foreground">
+                                {!isMobile && (
+                                  <p className="text-[10px] text-muted-foreground">
                                     Adjust the playback speed for browser-based text-to-speech. Voice selection uses browser/OS defaults.
-                                </p>
+                                  </p>
+                                )}
                             </div>
                         )}
 
