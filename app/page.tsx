@@ -1,4 +1,3 @@
-
 "use client";
 import 'katex/dist/katex.min.css';
 import '@/styles/custom-scrollbar.css';
@@ -6,6 +5,7 @@ import '@/styles/custom-scrollbar.css';
 import React, { Suspense, useCallback, useEffect, useState, useMemo } from 'react';
 import Image from 'next/image'; // Keep this import
 import { useTheme } from 'next-themes';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { KeyRound } from 'lucide-react';
@@ -109,6 +109,44 @@ const HomeContent = () => {
 
     const showCenteredForm = messages.length === 0 && !hasSubmitted;
     const showChatInterface = isKeyLoaded && apiKey;
+
+    // Keyboard Shortcuts (Windows/Linux: Ctrl, Mac: Cmd)
+    useHotkeys('ctrl+k, meta+k', (e) => {
+        e.preventDefault();
+        setIsSettingsDialogOpen(true);
+    }, [setIsSettingsDialogOpen]);
+    useHotkeys('ctrl+n, meta+n', (e) => {
+        e.preventDefault();
+        resetChatState();
+    }, [resetChatState]);
+    useHotkeys('ctrl+i, meta+i', (e) => {
+        e.preventDefault();
+        // Select image group if available
+        const imageGroup = allSearchGroupsConfig.find(g => g.id === 'image');
+        if (imageGroup && enabledSearchGroupIds.includes('image')) {
+            handleGroupSelection(imageGroup);
+        } else {
+            toast.info('Image group is not enabled.');
+        }
+    }, [handleGroupSelection, enabledSearchGroupIds]);
+    useHotkeys('ctrl+c, meta+c', (e) => {
+        e.preventDefault();
+        // Select chat group if available
+        const chatGroup = allSearchGroupsConfig.find(g => g.id === 'chat');
+        if (chatGroup && enabledSearchGroupIds.includes('chat')) {
+            handleGroupSelection(chatGroup);
+        } else {
+            toast.info('Chat group is not enabled.');
+        }
+    }, [handleGroupSelection, enabledSearchGroupIds]);
+    useHotkeys('ctrl+m, meta+m', (e) => {
+        e.preventDefault();
+        setIsGroupSelectorExpanded((prev) => !prev);
+    }, []);
+    useHotkeys('ctrl+p, meta+p', (e) => {
+        e.preventDefault();
+        handleToggleListening();
+    }, [handleToggleListening]);
 
     return (
         <div className="flex flex-col font-sans items-center min-h-screen bg-background text-foreground transition-colors duration-500">
@@ -375,4 +413,3 @@ const Home = () => {
 
 export default Home;
 
-    

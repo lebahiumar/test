@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true, // Recommended for development
   transpilePackages: ["geist"], // Keep if using Geist font
-  output: 'standalone', // Good for Docker deployments, optional otherwise
+  output: 'export', // Enable static export for Next.js 15+
   images: {
     remotePatterns: [
       {
